@@ -45,6 +45,29 @@ export class JavaLexer implements Lexer {
         }
     }
 
+    *getMissingSemicolons(tokens: Token[]): Generator<number, void, unknown> {
+        let line = 1;
+        for (let i = 1; i < tokens.length; i++) {
+            const previous = tokens[i - 1];
+            const current = tokens[i];
+            const next = tokens.length !== i + 1 ? tokens[i + 1] : null;
+
+            const isExcuser = (tok: string) =>
+                ["{", "}", ";", "\n"].includes(tok);
+
+            if (
+                (current.t === Tk.LINEBREAK && !isExcuser(previous.value)) ||
+                (!isExcuser(current.value) && next === null)
+            ) {
+                yield line;
+            }
+
+            if (current.t === Tk.LINEBREAK) {
+                line += 1;
+            }
+        }
+    }
+
     lex(code: string) {
         const tokens: Token[] = [];
         for (const line of code.split("\n")) {

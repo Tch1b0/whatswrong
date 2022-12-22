@@ -32,27 +32,41 @@ import { Ref, ref, watch, reactive } from "vue";
 const j = new JavaLexer();
 let codeTextArea: HTMLTextAreaElement;
 const code: Ref<string> = ref("");
+// execute when code is edited
 watch(reactive(code), () => {
+    // lex the code
     const lexed = j.lex(code.value);
+    // reset output
     output.value = "";
 
+    // define writing utility
     const write = (content: string, line: number) => {
+        // current line, seen from the output
         let currentLine = output.value.split("<br>").length;
-        console.log(currentLine, line);
+        // if the current line is less/equal than the desired line
         if (currentLine <= line) {
+            // append missing newlines
             while (currentLine < line) {
                 output.value += "<br>";
                 currentLine += 1;
             }
 
             output.value += content + "<br>";
-        } else if (currentLine > line) {
+        }
+        // if the current line is higher than the desired one (the tricky part)
+        else if (currentLine > line) {
+            // place a (non-functional) cursor at the start of the output
             let cursor = 0;
+
+            // iterate over every "<br>" and count them as newlines
             for (let i = 0; i < output.value.length - 1 - 4; i++) {
+                // check whether in the current line there already is a message, and place a comma if there is
                 const seperatorComma = () =>
                     output.value[i - 2] !== ">" ? "" : ", ";
 
+                // if the cursor is in place
                 if (cursor === line) {
+                    // insert the content into the line
                     output.value =
                         output.value.slice(0, i - 1) +
                         seperatorComma() +
@@ -60,8 +74,8 @@ watch(reactive(code), () => {
                         output.value.slice(i - 1);
                     break;
                 }
+                // increment the cursor if a break element is selected
                 if (output.value.slice(i, i + 4) === "<br>") {
-                    console.log(cursor);
                     cursor += 1;
                 }
             }
@@ -70,8 +84,12 @@ watch(reactive(code), () => {
 
     for (const [line, variable] of j.getVarDeclarations(lexed)) {
         if (variable.name.toLowerCase()[0] !== variable.name[0]) {
-            write(htmlWarn(`declare variables in camelCase`, line), line);
+            write(htmlWarn("declare variables in camelCase", line), line);
         }
+    }
+
+    for (const line of j.getMissingSemicolons(lexed)) {
+        write(htmlError("missing semicolon", line), line);
     }
 });
 
