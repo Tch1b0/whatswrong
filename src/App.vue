@@ -32,10 +32,11 @@
 
 <script lang="ts" setup>
 import { JavaLexer } from "@/lib";
-import { toCamelCase } from "@/utility";
+import { Phraser, toCamelCase } from "@/utility";
 import { Ref, ref, watch, reactive } from "vue";
 
 const j = new JavaLexer();
+const p = new Phraser("en");
 const output: Ref<string> = ref("");
 
 let codeTextArea: HTMLTextAreaElement;
@@ -97,13 +98,13 @@ watch(reactive(code), () => {
             variable.name.includes("_")
         ) {
             const camelCaseVar = toCamelCase(variable.name);
-            const text = `declare variables in camelCase -> ${camelCaseVar}`;
+            const text = `${p.get("wrong-variable-case")} -> ${camelCaseVar}`;
             write(htmlWarn(text, line), line);
         }
     }
 
     for (const line of j.getMissingSemicolons(lexed)) {
-        write(htmlError("missing semicolon", line), line);
+        write(htmlError(p.get("missing-semicolon"), line), line);
     }
 
     console.timeEnd("lint");
@@ -123,12 +124,16 @@ document.onkeydown = (ev: KeyboardEvent) => {
 
 // wrap message in warn-style
 function htmlWarn(message: string, line: number): string {
-    return `<span class="output-warning">Warning in line ${line}: ${message}</span>`;
+    return `<span class="output-warning">${p.get(
+        "warn"
+    )} ${line}: ${message}</span>`;
 }
 
 // wrap message in error-style
 function htmlError(message: string, line: number): string {
-    return `<span class="output-error">Error in line ${line}: ${message}</span>`;
+    return `<span class="output-error">${p.get(
+        "error"
+    )} ${line}: ${message}</span>`;
 }
 </script>
 
