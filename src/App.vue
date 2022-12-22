@@ -1,5 +1,5 @@
 <template>
-    <h1 class="text-center mt-5">Whats wrong, Java?</h1>
+    <h1 class="text-center mt-5">Whats wrong, <i>Java</i>?</h1>
 
     <!-- Root center Container -->
     <div class="flex justify-center mt-10">
@@ -10,7 +10,7 @@
             <select
                 name="language"
                 v-model="language"
-                class="p-2 bg-gray-900 text-white font-semibold rounded-md self-center transition-all w-1/8"
+                class="p-2 bg-gray-900 text-white font-semibold rounded-md self-center transition-all w-1/8 hover:bg-gray-700 hover:cursor-pointer"
             >
                 <option value="en">English</option>
                 <option value="de">Deutsch</option>
@@ -134,6 +134,10 @@ function lint() {
         }
     }
 
+    for (const [line, _] of j.getDeepNestedCode(lexed)) {
+        write(htmlWarn(p.get("deep-nested-code"), line), line);
+    }
+
     for (const line of j.getMissingSemicolons(lexed)) {
         write(htmlError(p.get("missing-semicolon"), line), line);
     }
@@ -182,6 +186,6 @@ function htmlError(message: string, line: number): string {
 }
 
 .mono-box {
-    @apply outline-black outline-2 outline-double transition-all p-3 overflow-x-scroll text-white font-mono w-full lg:w-1/3 rounded-md;
+    @apply outline-black outline-2 outline-double transition-all p-3 overflow-x-scroll text-white font-mono w-full lg:w-1/3 rounded-md selection:text-gray-700 selection:bg-gray-300;
 }
 </style>

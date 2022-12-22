@@ -37,6 +37,33 @@ const TYPES = [
 export class JavaLexer implements Lexer {
     language = "java" as const;
 
+    *getDeepNestedCode(
+        tokens: Token[]
+    ): Generator<[number, number], void, unknown> {
+        let level = 0;
+        let line = 1;
+
+        for (const token of tokens) {
+            switch (token.value) {
+                case "{": {
+                    level += 1;
+                    if (level >= 5) {
+                        yield [line, level];
+                    }
+                    break;
+                }
+
+                case "}": {
+                    level -= 1;
+                    break;
+                }
+
+                case "\n":
+                    line += 1;
+            }
+        }
+    }
+
     *getVarDeclarations(
         tokens: Token[]
     ): Generator<[number, { t: string; name: string }], void, unknown> {
@@ -49,7 +76,7 @@ export class JavaLexer implements Lexer {
 
             const items = tokens.slice(i, i + 3);
             if (
-                items[0].t === Tk.TYPE &&
+                [Tk.TYPE, Tk.IDENTIFIER].includes(items[0].t) &&
                 items[1].t === Tk.IDENTIFIER &&
                 [Tk.SEMICOLON, Tk.OPERATOR].includes(items[2].t)
             ) {
@@ -70,7 +97,7 @@ export class JavaLexer implements Lexer {
 
             const items = tokens.slice(i, i + 3);
             if (
-                items[0].t === Tk.TYPE &&
+                [Tk.TYPE, Tk.IDENTIFIER].includes(items[0].t) &&
                 items[1].t === Tk.IDENTIFIER &&
                 items[2].value === "("
             ) {
