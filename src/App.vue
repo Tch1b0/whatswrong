@@ -12,7 +12,7 @@
                     rows="30"
                     class="outline-black transition-all overflow-x-scroll overflow-y-auto outline-2 outline-double bg-gray-800 resize-none text-white p-5 font-mono rounded-md w-full lg:w-1/3"
                     v-model="code"
-                    placeholder="Enter your code here..."
+                    :placeholder="p.get('code-prompt') + '...'"
                     ref="codeTextArea"
                 ></textarea>
                 <div
@@ -24,9 +24,11 @@
         </div>
     </div>
     <footer class="bottom-0 w-full mt-5 text-black">
-        Made by <a href="https://github.com/Tch1b0">Tch1b0</a> ||
+        {{ p.get("made-by") }} <a href="https://github.com/Tch1b0">Tch1b0</a> ||
         <a href="https://johannespour.de">blog</a> ||
-        <a href="https://github.com/Tch1b0/whatswrong">source code</a>
+        <a href="https://github.com/Tch1b0/whatswrong">{{
+            p.get("source-code")
+        }}</a>
     </footer>
 </template>
 

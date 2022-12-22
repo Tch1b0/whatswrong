@@ -3,5 +3,8 @@
     "error": "Fehler in Zeile",
     "wrong-variable-case": "Deklariere Variablen im camelCase",
     "wrong-class-case": "Deklariere Klasse im PascalCase",
-    "missing-semicolon": "fehlendes Semikolon"
+    "missing-semicolon": "fehlendes Semikolon",
+    "code-prompt": "gib hier deinen Code ein",
+    "made-by": "Entwickelt von",
+    "source-code": "Quellcode"
 }
