@@ -7,10 +7,18 @@ const KEYWORDS = [
     "protected",
     "import",
     "class",
-    "void",
     "false",
     "true",
     "static",
+    "case",
+    "break",
+    "continue",
+    "for",
+    "while",
+    "do",
+    "switch",
+    "if",
+    "else",
 ];
 
 // "String" isn't a primitive type, but is listed because of it's regular usage
@@ -23,6 +31,7 @@ const TYPES = [
     "boolean",
     "float",
     "double",
+    "void",
 ];
 
 export class JavaLexer implements Lexer {

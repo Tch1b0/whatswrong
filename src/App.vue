@@ -10,30 +10,39 @@
                     name="code-area"
                     cols="70"
                     rows="30"
-                    class="outline-black transition-all overflow-x-scroll overflow-y-auto outline-2 outline-double bg-gray-800 resize-none text-white p-5 font-mono rounded-md w-3/4 lg:w-1/3"
+                    class="outline-black transition-all overflow-x-scroll overflow-y-auto outline-2 outline-double bg-gray-800 resize-none text-white p-5 font-mono rounded-md w-full lg:w-1/3"
                     v-model="code"
                     placeholder="Enter your code here..."
                     ref="codeTextArea"
                 ></textarea>
                 <div
                     v-if="output !== ''"
-                    class="outline-black outline-2 transition-all p-3 overflow-x-scroll whitespace-nowrap text-white font-mono outline-double bg-gray-800 w-3/4 lg:w-1/3 rounded-md"
+                    class="outline-black outline-2 transition-all p-3 overflow-x-scroll whitespace-nowrap text-white font-mono outline-double bg-gray-800 w-full lg:w-1/3 rounded-md"
                     v-html="output"
                 ></div>
             </div>
         </div>
     </div>
+    <footer class="bottom-0 w-full mt-5 text-black">
+        Made by <a href="https://github.com/Tch1b0">Tch1b0</a> ||
+        <a href="https://johannespour.de">blog</a> ||
+        <a href="https://github.com/Tch1b0/whatswrong">source code</a>
+    </footer>
 </template>
 
 <script lang="ts" setup>
 import { JavaLexer } from "@/lib";
+import { toCamelCase } from "@/utility";
 import { Ref, ref, watch, reactive } from "vue";
 
 const j = new JavaLexer();
+const output: Ref<string> = ref("");
+
 let codeTextArea: HTMLTextAreaElement;
 const code: Ref<string> = ref("");
 // execute when code is edited
 watch(reactive(code), () => {
+    console.time("lint");
     // lex the code
     const lexed = j.lex(code.value);
     // reset output
@@ -83,17 +92,22 @@ watch(reactive(code), () => {
     };
 
     for (const [line, variable] of j.getVarDeclarations(lexed)) {
-        if (variable.name.toLowerCase()[0] !== variable.name[0]) {
-            write(htmlWarn("declare variables in camelCase", line), line);
+        if (
+            variable.name.toLowerCase()[0] !== variable.name[0] ||
+            variable.name.includes("_")
+        ) {
+            const camelCaseVar = toCamelCase(variable.name);
+            const text = `declare variables in camelCase -> ${camelCaseVar}`;
+            write(htmlWarn(text, line), line);
         }
     }
 
     for (const line of j.getMissingSemicolons(lexed)) {
         write(htmlError("missing semicolon", line), line);
     }
-});
 
-const output: Ref<string> = ref("");
+    console.timeEnd("lint");
+});
 
 // enable TAB in code editor
 document.onkeydown = (ev: KeyboardEvent) => {
@@ -107,16 +121,22 @@ document.onkeydown = (ev: KeyboardEvent) => {
     }
 };
 
-function htmlWarn(text: string, line: number): string {
-    return `<span class="output-warning">Warning in line ${line}: ${text}</span>`;
+// wrap message in warn-style
+function htmlWarn(message: string, line: number): string {
+    return `<span class="output-warning">Warning in line ${line}: ${message}</span>`;
 }
 
-function htmlError(text: string, line: number): string {
-    return `<span class="output-error">Error in line ${line}: ${text}</span>`;
+// wrap message in error-style
+function htmlError(message: string, line: number): string {
+    return `<span class="output-error">Error in line ${line}: ${message}</span>`;
 }
 </script>
 
 <style>
+.output-info {
+    @apply text-blue-400;
+}
+
 .output-warning {
     @apply text-yellow-400;
 }
