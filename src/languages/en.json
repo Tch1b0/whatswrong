@@ -2,5 +2,6 @@
     "warn": "Warning in line",
     "error": "Error in line",
     "wrong-variable-case": "declare variables in camelCase",
+    "wrong-class-case": "declare classes in PascalCase",
     "missing-semicolon": "missing semicolon"
 }

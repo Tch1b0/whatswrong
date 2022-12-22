@@ -54,6 +54,23 @@ export class JavaLexer implements Lexer {
         }
     }
 
+    *getClassDeclarations(
+        tokens: Token[]
+    ): Generator<[number, string], void, unknown> {
+        let line = 1;
+        for (let i = 0; i < tokens.length - 1; i++) {
+            if (tokens[i].t == Tk.LINEBREAK) {
+                line += 1;
+                continue;
+            }
+
+            const items = tokens.slice(i, i + 2);
+            if (items[0].value === "class" && items[1].t === Tk.IDENTIFIER) {
+                yield [line, items[1].value];
+            }
+        }
+    }
+
     *getMissingSemicolons(tokens: Token[]): Generator<number, void, unknown> {
         let line = 1;
         for (let i = 1; i < tokens.length; i++) {

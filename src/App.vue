@@ -32,11 +32,11 @@
 
 <script lang="ts" setup>
 import { JavaLexer } from "@/lib";
-import { Phraser, toCamelCase } from "@/utility";
+import { Phraser, toCamelCase, toPascalCase } from "@/utility";
 import { Ref, ref, watch, reactive } from "vue";
 
 const j = new JavaLexer();
-const p = new Phraser("en");
+const p = new Phraser("de");
 const output: Ref<string> = ref("");
 
 let codeTextArea: HTMLTextAreaElement;
@@ -93,12 +93,17 @@ watch(reactive(code), () => {
     };
 
     for (const [line, variable] of j.getVarDeclarations(lexed)) {
-        if (
-            variable.name.toLowerCase()[0] !== variable.name[0] ||
-            variable.name.includes("_")
-        ) {
-            const camelCaseVar = toCamelCase(variable.name);
-            const text = `${p.get("wrong-variable-case")} -> ${camelCaseVar}`;
+        const camelName = toCamelCase(variable.name);
+        if (variable.name !== camelName) {
+            const text = `${p.get("wrong-variable-case")} -> ${camelName}`;
+            write(htmlWarn(text, line), line);
+        }
+    }
+
+    for (const [line, name] of j.getClassDeclarations(lexed)) {
+        const pascalName = toPascalCase(name);
+        if (name !== pascalName) {
+            const text = `${p.get("wrong-class-case")} -> ${pascalName}`;
             write(htmlWarn(text, line), line);
         }
     }
