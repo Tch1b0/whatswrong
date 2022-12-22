@@ -76,15 +76,11 @@ export class JavaLexer implements Lexer {
         for (let i = 1; i < tokens.length; i++) {
             const previous = tokens[i - 1];
             const current = tokens[i];
-            const next = tokens.length !== i + 1 ? tokens[i + 1] : null;
+            const isStatementEnd = (tok: Token) =>
+                [")", "]"].includes(tok.value) ||
+                [Tk.IDENTIFIER, Tk.NUMBER].includes(tok.t);
 
-            const isExcuser = (tok: string) =>
-                ["{", "}", ";", "\n"].includes(tok);
-
-            if (
-                (current.t === Tk.LINEBREAK && !isExcuser(previous.value)) ||
-                (!isExcuser(current.value) && next === null)
-            ) {
+            if (current.t === Tk.LINEBREAK && isStatementEnd(previous)) {
                 yield line;
             }
 
@@ -160,7 +156,8 @@ export class JavaLexer implements Lexer {
                     default: {
                         if (
                             isIdentifier(cache) &&
-                            !isIdentifier(cache + lookahead)
+                            (lookahead === "" ||
+                                !isIdentifier(cache + lookahead))
                         ) {
                             if (KEYWORDS.includes(cache)) {
                                 pushTk(Tk.KEYWORD);
@@ -171,7 +168,7 @@ export class JavaLexer implements Lexer {
                             }
                         } else if (
                             isNumber(cache) &&
-                            !isNumber(cache + lookahead)
+                            (lookahead === "" || !isNumber(cache + lookahead))
                         ) {
                             pushTk(Tk.NUMBER);
                         }

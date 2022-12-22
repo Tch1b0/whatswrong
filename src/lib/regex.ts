@@ -3,5 +3,5 @@ export function isIdentifier(str: string) {
 }
 
 export function isNumber(str: string) {
-    return /^[0-9]+(\.[0-9]+)?$/.test(str);
+    return /^([0-9]*(\.[0-9]+)*)+$/.test(str);
 }

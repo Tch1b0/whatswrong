@@ -1,23 +1,32 @@
 <template>
     <h1 class="text-center mt-5">Whats wrong, Java?</h1>
+
     <!-- Root center Container -->
-    <div class="flex justify-center mt-14">
+    <div class="flex justify-center mt-10">
         <!-- Root object Container -->
         <div class="flex justify-center flex-col gap-1 transition-all w-full">
+            <select
+                name="language"
+                v-model="language"
+                class="p-2 bg-gray-900 text-white font-semibold rounded-md self-center transition-all w-1/8"
+            >
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+            </select>
             <!-- Textarea Container -->
             <div class="flex flex-col lg:flex-row justify-center gap-5">
                 <textarea
                     name="code-area"
                     cols="70"
                     rows="30"
-                    class="outline-black transition-all overflow-x-scroll overflow-y-auto outline-2 outline-double bg-gray-800 resize-none text-white p-5 font-mono rounded-md w-full lg:w-1/3"
+                    class="mono-box bg-gray-800 resize-none"
                     v-model="code"
                     :placeholder="p.get('code-prompt') + '...'"
                     ref="codeTextArea"
                 ></textarea>
                 <div
                     v-if="output !== ''"
-                    class="outline-black outline-2 transition-all p-3 overflow-x-scroll whitespace-nowrap text-white font-mono outline-double bg-gray-800 w-full lg:w-1/3 rounded-md"
+                    class="mono-box bg-gray-900 whitespace-nowrap"
                     v-html="output"
                 ></div>
             </div>
@@ -25,7 +34,7 @@
     </div>
     <footer class="bottom-0 w-full mt-5 text-black">
         {{ p.get("made-by") }} <a href="https://github.com/Tch1b0">Tch1b0</a> ||
-        <a href="https://johannespour.de">blog</a> ||
+        <a href="https://johannespour.de">Blog</a> ||
         <a href="https://github.com/Tch1b0/whatswrong">{{
             p.get("source-code")
         }}</a>
@@ -34,17 +43,24 @@
 
 <script lang="ts" setup>
 import { JavaLexer } from "@/lib";
-import { Phraser, toCamelCase, toPascalCase } from "@/utility";
+import { Phraser, toCamelCase, toPascalCase, SpokenLanguage } from "@/utility";
 import { Ref, ref, watch, reactive } from "vue";
 
 const j = new JavaLexer();
-const p = new Phraser("de");
+const language: Ref<SpokenLanguage> = ref("en");
+const p = new Phraser(language.value);
+watch(reactive(language), () => {
+    p.lang = language.value;
+    lint();
+});
 const output: Ref<string> = ref("");
 
 let codeTextArea: HTMLTextAreaElement;
 const code: Ref<string> = ref("");
 // execute when code is edited
-watch(reactive(code), () => {
+watch(reactive(code), lint);
+
+function lint() {
     console.time("lint");
     // lex the code
     const lexed = j.lex(code.value);
@@ -72,16 +88,11 @@ watch(reactive(code), () => {
 
             // iterate over every "<br>" and count them as newlines
             for (let i = 0; i < output.value.length - 1 - 4; i++) {
-                // check whether in the current line there already is a message, and place a comma if there is
-                const seperatorComma = () =>
-                    output.value[i - 2] !== ">" ? "" : ", ";
-
                 // if the cursor is in place
                 if (cursor === line) {
                     // insert the content into the line
                     output.value =
                         output.value.slice(0, i - 1) +
-                        seperatorComma() +
                         content +
                         output.value.slice(i - 1);
                     break;
@@ -115,7 +126,7 @@ watch(reactive(code), () => {
     }
 
     console.timeEnd("lint");
-});
+}
 
 // enable TAB in code editor
 document.onkeydown = (ev: KeyboardEvent) => {
@@ -155,5 +166,9 @@ function htmlError(message: string, line: number): string {
 
 .output-error {
     @apply text-red-400;
+}
+
+.mono-box {
+    @apply outline-black outline-2 outline-double transition-all p-3 overflow-x-scroll text-white font-mono w-full lg:w-1/3 rounded-md;
 }
 </style>

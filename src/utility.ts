@@ -26,7 +26,7 @@ export function toPascalCase(variable: string): string {
     return n;
 }
 
-type SpokenLanguage = "en" | "de";
+export type SpokenLanguage = "en" | "de";
 
 export class Phraser {
     private __lang: SpokenLanguage;
