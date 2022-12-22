@@ -34,7 +34,7 @@ let codeTextArea: HTMLTextAreaElement;
 const code: Ref<string> = ref("");
 watch(reactive(code), () => {
     const lexed = j.lex(code.value);
-    output.value = "<br><br><br><br><br><br><br>";
+    output.value = "";
 
     const write = (content: string, line: number) => {
         let currentLine = output.value.split("<br>").length;
