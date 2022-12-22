@@ -1,27 +1,21 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <h1 class="text-center">Whats wrong?</h1>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+<script lang="ts" setup>
+import { JavaLexer } from "@/lib/javalexer";
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    HelloWorld
+const j = new JavaLexer();
+
+console.log(
+    j.lex(`
+import abcdefg;
+
+public class Test {
+  public static void main(String[] args) {
+    System.out.println()
   }
-});
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
-</style>
+`)
+);
+</script>
