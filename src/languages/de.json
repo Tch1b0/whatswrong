@@ -1,8 +1,9 @@
 {
     "warn": "Warnung in Zeile",
     "error": "Fehler in Zeile",
-    "wrong-variable-case": "Deklariere Variablen im camelCase",
-    "wrong-class-case": "Deklariere Klasse im PascalCase",
+    "wrong-variable-case": "deklariere Variablen im camelCase",
+    "wrong-method-case": "deklariere Methoden im camelCase",
+    "wrong-class-case": "deklariere Klasse im PascalCase",
     "missing-semicolon": "fehlendes Semikolon",
     "code-prompt": "gib hier deinen Code ein",
     "made-by": "Entwickelt von",

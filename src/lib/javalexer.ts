@@ -41,15 +41,40 @@ export class JavaLexer implements Lexer {
         tokens: Token[]
     ): Generator<[number, { t: string; name: string }], void, unknown> {
         let line = 1;
-        for (let i = 0; i < tokens.length - 1; i++) {
+        for (let i = 0; i < tokens.length - 2; i++) {
             if (tokens[i].t == Tk.LINEBREAK) {
                 line += 1;
                 continue;
             }
 
-            const items = tokens.slice(i, i + 2);
-            if (items[0].t === Tk.TYPE && items[1].t === Tk.IDENTIFIER) {
+            const items = tokens.slice(i, i + 3);
+            if (
+                items[0].t === Tk.TYPE &&
+                items[1].t === Tk.IDENTIFIER &&
+                [Tk.SEMICOLON, Tk.OPERATOR].includes(items[2].t)
+            ) {
                 yield [line, { t: items[0].value, name: items[1].value }];
+            }
+        }
+    }
+
+    *getFuncDeclarations(
+        tokens: Token[]
+    ): Generator<[number, string], void, unknown> {
+        let line = 1;
+        for (let i = 0; i < tokens.length - 2; i++) {
+            if (tokens[i].t == Tk.LINEBREAK) {
+                line += 1;
+                continue;
+            }
+
+            const items = tokens.slice(i, i + 3);
+            if (
+                items[0].t === Tk.TYPE &&
+                items[1].t === Tk.IDENTIFIER &&
+                items[2].value === "("
+            ) {
+                yield [line, items[1].value];
             }
         }
     }

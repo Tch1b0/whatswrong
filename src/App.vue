@@ -4,7 +4,9 @@
     <!-- Root center Container -->
     <div class="flex justify-center mt-10">
         <!-- Root object Container -->
-        <div class="flex justify-center flex-col gap-1 transition-all w-full">
+        <div
+            class="flex justify-center flex-col gap-1 transition-all w-full overflow-auto overflow-y-clip"
+        >
             <select
                 name="language"
                 v-model="language"
@@ -19,7 +21,7 @@
                     name="code-area"
                     cols="70"
                     rows="30"
-                    class="mono-box bg-gray-800 resize-none"
+                    class="mono-box bg-gray-800"
                     v-model="code"
                     :placeholder="p.get('code-prompt') + '...'"
                     ref="codeTextArea"
@@ -47,10 +49,13 @@ import { Phraser, toCamelCase, toPascalCase, SpokenLanguage } from "@/utility";
 import { Ref, ref, watch, reactive } from "vue";
 
 const j = new JavaLexer();
-const language: Ref<SpokenLanguage> = ref("en");
+const language: Ref<SpokenLanguage> = ref(
+    (localStorage.getItem("preferred-language") as SpokenLanguage) ?? "en"
+);
 const p = new Phraser(language.value);
 watch(reactive(language), () => {
     p.lang = language.value;
+    localStorage.setItem("preferred-language", p.lang);
     lint();
 });
 const output: Ref<string> = ref("");
@@ -109,6 +114,14 @@ function lint() {
         const camelName = toCamelCase(variable.name);
         if (variable.name !== camelName) {
             const text = `${p.get("wrong-variable-case")} -> ${camelName}`;
+            write(htmlWarn(text, line), line);
+        }
+    }
+
+    for (const [line, func] of j.getFuncDeclarations(lexed)) {
+        const camelName = toCamelCase(func);
+        if (func !== camelName) {
+            const text = `${p.get("wrong-method-case")} -> ${camelName}`;
             write(htmlWarn(text, line), line);
         }
     }
