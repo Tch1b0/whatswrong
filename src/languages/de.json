@@ -4,7 +4,7 @@
     "wrong-variable-case": "deklariere Variablen im camelCase",
     "wrong-method-case": "deklariere Methoden im camelCase",
     "wrong-class-case": "deklariere Klasse im PascalCase",
-    "deep-nested-code": "der Code ist sehr tief verschachtelt, und dadurch schwer lesbar. Teile ihn in Methoden auf oder abstrahiere ihn anderwaltig",
+    "deep-nested-code": "der Code ist tief verschachtelt, und dadurch schwer lesbar. Teile ihn in Methoden auf oder abstrahiere ihn anderwaltig",
     "missing-semicolon": "fehlendes Semikolon",
     "code-prompt": "gib hier deinen Code ein",
     "made-by": "Entwickelt von",

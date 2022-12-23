@@ -177,6 +177,11 @@ export class JavaLexer implements Lexer {
                         break;
                     }
 
+                    case '"': {
+                        pushTk(Tk.QUOTE);
+                        break;
+                    }
+
                     case "(":
                     case ")": {
                         pushTk(Tk.PAREN);

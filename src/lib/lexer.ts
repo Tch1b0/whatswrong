@@ -14,6 +14,7 @@ export const enum Tk {
     LINEBREAK,
     STRING,
     DOT,
+    QUOTE,
 }
 
 export interface Token {
