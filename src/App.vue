@@ -186,6 +186,6 @@ function htmlError(message: string, line: number): string {
 }
 
 .mono-box {
-    @apply outline-black outline-2 outline-double transition-all p-3 overflow-x-scroll overflow-y-visible text-white font-mono w-full lg:w-1/3 rounded-md selection:text-gray-700 selection:bg-gray-300;
+    @apply outline-black outline-2 outline-double transition-all p-3 overflow-x-scroll overflow-y-visible text-white font-mono w-full lg:w-2/5 rounded-md selection:text-gray-700 selection:bg-gray-300;
 }
 </style>
