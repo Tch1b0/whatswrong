@@ -12,23 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.4.2
 
-      - name: Install Node
-        uses: actions/setup-node@v3.4.1
+      - name: Vue to Github Pages
+        uses: xRealNeon/VuePagesAction@1.0.1
         with:
-          node-version: 17.x
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Build Project
-        run: npm run build
-
-      - name: Deploy to Github Pages
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v3.0.0
-        with:
-          target_branch: gh-pages
-          build_dir: dist
-          jekyll: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          username: "Tch1b0"
+          reponame: "whatswrong"
+          token: ${{ secrets.GITHUB_TOKEN }}
