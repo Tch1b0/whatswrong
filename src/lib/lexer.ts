@@ -1,3 +1,4 @@
+// LexerLanguage lists the different lexers available, which currently is just java
 type LexerLanguage = "java";
 
 export const enum Tk {
@@ -15,6 +16,7 @@ export const enum Tk {
     STRING,
     DOT,
     QUOTE,
+    COMMA,
 }
 
 export interface Token {

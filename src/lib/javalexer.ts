@@ -210,6 +210,11 @@ export class JavaLexer implements Lexer {
                         break;
                     }
 
+                    case ",": {
+                        pushTk(Tk.COMMA);
+                        break;
+                    }
+
                     default: {
                         if (
                             isIdentifier(cache) &&
