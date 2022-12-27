@@ -1,5 +1,5 @@
 <template>
-    <h1 class="text-center mt-5">Whats wrong, <i>Java</i>?</h1>
+    <h1 class="text-center mt-5">What's wrong, <i>Java</i>?</h1>
 
     <!-- Root center Container -->
     <div class="flex justify-center mt-10">
