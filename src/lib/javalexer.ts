@@ -19,6 +19,8 @@ const KEYWORDS = [
     "switch",
     "if",
     "else",
+    "new",
+    "default",
 ];
 
 // "String" isn't a primitive type, but is listed because of it's regular usage
