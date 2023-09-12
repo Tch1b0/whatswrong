@@ -21,7 +21,7 @@
                     name="code-area"
                     cols="70"
                     rows="30"
-                    class="mono-box bg-gray-800"
+                    class="mono-box bg-gray-800 whitespace-pre"
                     v-model="code"
                     :placeholder="p.get('code-prompt') + '...'"
                     ref="codeTextArea"

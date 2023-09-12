@@ -146,7 +146,7 @@ export class JavaLexer implements Lexer {
 
     lex(code: string) {
         const tokens: Token[] = [];
-        for (const line of code.split("\n")) {
+        outer: for (const line of code.split("\n")) {
             let cache = "";
             const pushTk = (tk: Tk, val = cache) => {
                 tokens.push({ t: tk, value: val });
@@ -157,9 +157,24 @@ export class JavaLexer implements Lexer {
                 const char = line[i];
                 let lookahead: string = i == line.length - 1 ? "" : line[i + 1];
 
+                if (char === "/" && lookahead === "/") {
+                    tokens.push({ t: Tk.LINEBREAK, value: "\n" });
+                    continue outer;
+                }
+
                 if (char !== " " && char !== "\t") {
                     cache += char;
                 } else {
+                    continue;
+                }
+
+                if (
+                    cache[0] === '"' &&
+                    cache.length > 1 &&
+                    char === '"' &&
+                    cache[cache.length - 2] !== "\\"
+                ) {
+                    pushTk(Tk.STRING);
                     continue;
                 }
 
