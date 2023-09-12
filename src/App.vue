@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-    <footer class="bottom-0 w-full mt-5 text-black">
+    <footer class="bottom-0 w-full mt-5 text-black flex justify-center gap-2">
         {{ p.get("made-by") }} <a href="https://github.com/Tch1b0">Tch1b0</a> ||
         <a href="https://johannespour.de">Blog</a> ||
         <a href="https://github.com/Tch1b0/whatswrong">{{
